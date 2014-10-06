@@ -1,0 +1,51 @@
+PODS:
+  - EDHFinder (0.1.0):
+    - FCFileManager (~> 1.0)
+    - FontAwesomeKit (~> 2.1)
+    - MGSwipeTableCell (~> 1.1)
+  - Expecta (0.3.1)
+  - Expecta+Snapshots (1.2.1):
+    - Expecta
+    - FBSnapshotTestCase
+  - FBSnapshotTestCase (1.2)
+  - FCFileManager (1.0.5)
+  - FontAwesomeKit (2.1.8):
+    - FontAwesomeKit/Core
+    - FontAwesomeKit/FontAwesome
+    - FontAwesomeKit/FoundationIcons
+    - FontAwesomeKit/IonIcons
+    - FontAwesomeKit/Zocial
+  - FontAwesomeKit/Core (2.1.8)
+  - FontAwesomeKit/FontAwesome (2.1.8):
+    - FontAwesomeKit/Core
+  - FontAwesomeKit/FoundationIcons (2.1.8):
+    - FontAwesomeKit/Core
+  - FontAwesomeKit/IonIcons (2.1.8):
+    - FontAwesomeKit/Core
+  - FontAwesomeKit/Zocial (2.1.8):
+    - FontAwesomeKit/Core
+  - MGSwipeTableCell (1.1.1)
+  - Specta (0.2.1)
+
+DEPENDENCIES:
+  - EDHFinder (from `../`)
+  - Expecta
+  - Expecta+Snapshots
+  - FBSnapshotTestCase
+  - Specta (~> 0.2.1)
+
+EXTERNAL SOURCES:
+  EDHFinder:
+    :path: ../
+
+SPEC CHECKSUMS:
+  EDHFinder: de49622ead97c66cbd0e993ff913549a12ecdce6
+  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
+  Expecta+Snapshots: 30c28e3d8104665ee70e32df1cfc030bb37a8a6c
+  FBSnapshotTestCase: 4159bdf235fdae25aa7d813f1452a4f05ad4f9cd
+  FCFileManager: 63b3cc33188a72da88d1cbce69978523aa5f6320
+  FontAwesomeKit: a2edea3111dab107b4cc43b85881b404eb063385
+  MGSwipeTableCell: fe8f11999f6d99c707675693ae90745bf45086ac
+  Specta: 9141310f46b1f68b676650ff2854e1ed0b74163a
+
+COCOAPODS: 0.34.1
