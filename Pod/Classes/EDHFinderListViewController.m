@@ -177,7 +177,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     EDHFinderItem *item = [self itemAdIndexPath:indexPath];
 
     if (item.isDirectory) {
-        EDHFinderListViewController *nextController = [[EDHFinderListViewController alloc] initWithPath:item.path delegate:self.listDelegate];
+        EDHFinderListViewController *nextController = [[[self class] alloc] initWithPath:item.path delegate:self.listDelegate];
         [self.navigationController pushViewController:nextController animated:YES];
         if ([self.listDelegate respondsToSelector:@selector(listViewController:didMoveToDirectory:)]) {
             [self.listDelegate listViewController:nextController didMoveToDirectory:item];

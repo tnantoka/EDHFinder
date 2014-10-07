@@ -46,7 +46,11 @@ static EDHFinder *sharedInstance = nil;
 }
 
 - (EDHFinderListViewController *)listViewControllerWithDelegate:(id<EDHFinderListViewControllerDelegate>)delegate {
-    return  [[EDHFinderListViewController alloc] initWithPath:self.rootPath delegate:delegate];
+    if ([self.finderDelegate respondsToSelector:@selector(listViewControllerWithPath:delegate:)]) {
+        return [self.finderDelegate listViewControllerWithPath:self.rootPath delegate:delegate];
+    } else {
+        return [[EDHFinderListViewController alloc] initWithPath:self.rootPath delegate:delegate];
+    }
 }
 
 - (EDHFinderItem *)rootItem {

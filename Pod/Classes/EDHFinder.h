@@ -11,12 +11,14 @@
 #import "EDHFinderListViewController.h"
 #import "EDHFinderItem.h"
 
+@protocol EDHFinderDelegate;
+
 @interface EDHFinder : NSObject
 
 @property (nonatomic, copy) NSString *rootPath;
 @property (nonatomic, copy) UIColor *iconColor;
 @property (nonatomic) BOOL toolbarHidden;
-
+@property (nonatomic, weak) id<EDHFinderDelegate> finderDelegate;
 
 + (instancetype)sharedFinder;
 
@@ -33,5 +35,14 @@
 - (void)showErrorWithMessage:(NSString *)message controller:(UIViewController *)controller;
 
 - (NSString *)identifier;
+
+@end
+
+
+@protocol EDHFinderDelegate <NSObject>
+
+@optional
+
+- (EDHFinderListViewController *)listViewControllerWithPath:(NSString *)path delegate:(id<EDHFinderListViewControllerDelegate>)delegate;
 
 @end
