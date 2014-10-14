@@ -13,6 +13,7 @@
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *mimeType;
+@property (nonatomic) BOOL isFile;
 @property (nonatomic) BOOL isDirectory;
 @property (nonatomic) NSDate *modificationDate;
 
@@ -35,5 +36,7 @@
 - (NSURL *)fileURL;
 - (NSString *)content;
 - (void)updateContent:(NSString *)content;
+
+- (EDHFinderItem *)parent;
 
 @end

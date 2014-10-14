@@ -69,15 +69,4 @@ static EDHFinder *sharedInstance = nil;
     return @"com.bornneet.EDHFinder";
 }
 
-# pragma mark - Utilities
-
-- (void)showErrorWithMessage:(NSString *)message controller:(UIViewController *)controller {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
-    
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-    }]];
-    
-    [controller presentViewController:alertController animated:YES completion:nil];
-}
-
 @end

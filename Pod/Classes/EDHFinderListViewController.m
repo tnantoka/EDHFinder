@@ -10,6 +10,7 @@
 
 #import "EDHFinder.h"
 #import "EDHFinderMoveViewController.h"
+#import "EDHUtility.h"
 
 #import "FCFileManager.h"
 #import <FontAwesomeKit/FontAwesomeKit.h>
@@ -18,7 +19,7 @@
 
 static NSString * const reuseIdentifier = @"reuseIdentifier";
 
-static const CGFloat ICON_SIZE = 32.0f;
+static const CGFloat kIconSize = 32.0f;
 
 typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     EDHFinderListViewControllerCreateTypeFile,
@@ -55,12 +56,6 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     if (![EDHFinder sharedFinder].toolbarHidden) {
@@ -73,6 +68,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     pathLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     pathLabel.text = [self.item relativePath];
     pathLabel.textAlignment = NSTextAlignmentCenter;
+    pathLabel.textColor = [UIToolbar appearance].tintColor;
     UIBarButtonItem *pathItem = [[UIBarButtonItem alloc] initWithCustomView:pathLabel];
     
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -104,18 +100,15 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 # pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
     return self.items.count;
 }
 
@@ -127,19 +120,15 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         //cell.tintColor = [EDHFinder sharedFinder].iconColor;
     }
     
-    // Configure the cell...
     [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
 }
 
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
     return NO;
 }
 
-// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         EDHFinderItem *item = [self itemAdIndexPath:indexPath];
@@ -152,24 +141,10 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                 [self.listDelegate listViewController:self didBackToDirectory:self.item];
             }
         } failure:^(NSError *error) {
-            [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+            [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
         }];
     }
 }
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 # pragma mark - UITableViewDelegate
 
@@ -217,7 +192,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                 [item duplicate:^(EDHFinderItem *newItem) {
                     [self insertItem:newItem atIndex:0];
                 } failure:^(NSError *error) {
-                    [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                    [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                 }];
             }]];
 
@@ -227,7 +202,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     [item moveTo:toItem success:^{
                         [self removeItem:item atIndexPath:indexPath];
                     } failure:^(NSError *error) {
-                        [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                        [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                     }];
                 };
                 [self presentViewController:moveController animated:YES completion:nil];
@@ -249,7 +224,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 # pragma mark - Actions
 
 - (void)addItemDidTap:(id)sender {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"New", nil) message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"File", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self create:EDHFinderListViewControllerCreateTypeFile];
@@ -291,19 +266,18 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 
     FAKIonIcons *icon;
     if (item.isDirectory) {
-        icon = [FAKIonIcons ios7FolderIconWithSize:ICON_SIZE];
+        icon = [FAKIonIcons ios7FolderIconWithSize:kIconSize];
     } else {
-        icon = [FAKIonIcons documentIconWithSize:ICON_SIZE];
+        icon = [FAKIonIcons documentIconWithSize:kIconSize];
     }
     [icon addAttribute:NSForegroundColorAttributeName value:[EDHFinder sharedFinder].iconColor];
-    UIImage *image = [icon imageWithSize:CGSizeMake(ICON_SIZE, ICON_SIZE)];
+    UIImage *image = [icon imageWithSize:CGSizeMake(kIconSize, kIconSize)];
     cell.imageView.image = image;
     
     cell.detailTextLabel.text = item.modificationDate.description;
     
     cell.delegate = self;
     
-    //configure right buttons
     cell.rightButtons = @[
                           [MGSwipeButton buttonWithTitle:NSLocalizedString(@"Delete", nil) backgroundColor:[UIColor redColor]],
                           [MGSwipeButton buttonWithTitle:NSLocalizedString(@"More", nil) backgroundColor:[UIColor lightGrayColor]]
@@ -354,7 +328,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     [self.item createFileWithName:text success:^(EDHFinderItem *item) {
                         [self insertItem:item atIndex:0];
                     } failure:^(NSError *error) {
-                        [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                        [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                     }];
                     break;
                 }
@@ -362,7 +336,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     [self.item createDirectoryWithName:text success:^(EDHFinderItem *item) {
                         [self insertItem:item atIndex:0];
                     } failure:^(NSError *error) {
-                        [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                        [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                     }];
                     break;
                 }
@@ -373,7 +347,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                         [self endLoading];
                     } failure:^(NSError *error) {
                         if (error) {
-                            [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                            [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                         } else {
                             [self insertItem:nil atIndex:0];
                         }
@@ -406,7 +380,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
             [item renameTo:text success:^{
                 [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             } failure:^(NSError *error) {
-                [[EDHFinder sharedFinder] showErrorWithMessage:error.localizedDescription controller:self];
+                [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
             }];
         }
     }]];
@@ -421,7 +395,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         [self.items insertObject:item atIndex:index];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
-        [[EDHFinder sharedFinder] showErrorWithMessage:NSLocalizedString(@"Already exists.", nil) controller:self];
+        [EDHUtility showErrorWithMessage:NSLocalizedString(@"Already exists.", nil) controller:self];
     }
 }
 

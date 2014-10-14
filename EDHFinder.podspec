@@ -32,13 +32,14 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
-  s.resource_bundles = {
-    'EDHFinder' => ['Pod/Assets/*.png']
-  }
+  #s.resource_bundles = {
+  #  'EDHFinder' => ['Pod/Assets/*.png']
+  #}
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'FCFileManager', '~> 1.0'
   s.dependency 'FontAwesomeKit', '~> 2.1'
   s.dependency 'MGSwipeTableCell', '~> 1.1'
+  s.dependency 'EDHUtility', '~> 0.1'
 end

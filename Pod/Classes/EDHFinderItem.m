@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
         self.mimeType = [self detectMimeType];
         
         NSDictionary *attributes = [FCFileManager attributesOfItemAtPath:self.path];
+        self.isFile = [attributes[NSFileType] isEqualToString:NSFileTypeRegular];
         self.isDirectory = [attributes[NSFileType] isEqualToString:NSFileTypeDirectory];
         self.modificationDate = attributes[NSFileModificationDate];
         
@@ -207,6 +208,11 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     }
 }
 
+- (EDHFinderItem *)parent {
+    NSString *path = self.path.stringByDeletingLastPathComponent;
+    return [[EDHFinderItem alloc] initWithPath:path];
+}
+
 # pragma mark - Utilities
 
 - (NSString *)pathWithRename:(NSString *)name {
@@ -260,9 +266,15 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
 }
 
 - (NSString *)detectMimeType {
-    CFStringRef extension = CFBridgingRetain(self.path.pathExtension);
-    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extension, NULL);
-    NSString *type = CFBridgingRelease(UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType));
+    NSString *ext = self.path.pathExtension;
+
+    if ([ext isEqualToString:@"md"] || [ext isEqualToString:@"markdown"]) {
+        return @"text/markdown";
+    }
+    
+    CFStringRef extRef = CFBridgingRetain(ext);
+    CFStringRef utiRef = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extRef, NULL);
+    NSString *type = CFBridgingRelease(UTTypeCopyPreferredTagWithClass(utiRef, kUTTagClassMIMEType));
     return type;
 }
 

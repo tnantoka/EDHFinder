@@ -32,8 +32,6 @@
 
 - (NSString *)relativePathFromRoot:(NSString *)path;
 
-- (void)showErrorWithMessage:(NSString *)message controller:(UIViewController *)controller;
-
 - (NSString *)identifier;
 
 @end
