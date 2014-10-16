@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "EDHFinder"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "File management interface for iOS."
   s.description      = <<-DESC
                        Accessing file system with table view, developed for Edhita.
@@ -32,12 +32,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes'
-  #s.resource_bundles = {
-  #  'EDHFinder' => ['Pod/Assets/*.png']
-  #}
+  s.resource = 'Pod/Assets/EDHFinder.bundle'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'FCFileManager', '~> 1.0'
   s.dependency 'FontAwesomeKit', '~> 2.1'
   s.dependency 'MGSwipeTableCell', '~> 1.1'

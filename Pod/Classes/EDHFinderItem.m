@@ -9,6 +9,7 @@
 #import "EDHFinderItem.h"
 
 #import "EDHFinder.h"
+#import "EDHUtility.h"
 
 #import "FCFileManager.h"
 
@@ -169,7 +170,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
 
 - (void)duplicate:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
     int i = 2;
-    NSString *copyOfName = [NSString stringWithFormat:NSLocalizedString(@"Copy of %@", nil), self.name];
+    NSString *copyOfName = [NSString stringWithFormat:[EDHUtility localizedString:@"Copy of %@" withScope:EDHFinderPodName], self.name];
     NSString *newName = copyOfName;
     while ([FCFileManager existsItemAtPath: [self pathWithRename:newName]]) {
         newName = [NSString stringWithFormat:@"%@ %d", copyOfName, i];
@@ -219,10 +220,6 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     return [[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:name];
 }
 
-- (NSError *)alreadyExists {
-    return [NSError errorWithDomain:[[EDHFinder sharedFinder] identifier] code:1 userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"Already exists.", nil) }];
-}
-
 - (void)createWithType:(EDHFinderItemCreateType)type name:(NSString *)name success:(void (^)(EDHFinderItem *item))success failure:(void (^)(NSError *error))failure {
     NSString *path = [self.path stringByAppendingPathComponent:name];
     
@@ -258,7 +255,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
 - (BOOL)existsItemAtPath:(NSString *)path failure:(void (^)(NSError *error))failure {
     if ([FCFileManager existsItemAtPath:path]) {
         if (failure) {
-            failure([self alreadyExists]);            
+            failure([EDHUtility errorWithDescription:[EDHUtility localizedString:@"Already exists." withScope:EDHFinderPodName]]);
         }
         return YES;
     }

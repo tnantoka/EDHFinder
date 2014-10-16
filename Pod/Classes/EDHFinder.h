@@ -11,6 +11,8 @@
 #import "EDHFinderListViewController.h"
 #import "EDHFinderItem.h"
 
+extern NSString * const EDHFinderPodName;
+
 @protocol EDHFinderDelegate;
 
 @interface EDHFinder : NSObject
@@ -31,8 +33,6 @@
 - (EDHFinderItem *)rootItem;
 
 - (NSString *)relativePathFromRoot:(NSString *)path;
-
-- (NSString *)identifier;
 
 @end
 

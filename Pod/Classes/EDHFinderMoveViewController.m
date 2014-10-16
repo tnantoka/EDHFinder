@@ -9,6 +9,7 @@
 #import "EDHFinderMoveViewController.h"
 
 #import "EDHFinder.h"
+#import "EDHUtility.h"
 
 @interface EDHFinderMoveViewController () <EDHFinderListViewControllerDelegate>
 
@@ -23,7 +24,7 @@
 
 - (id)initWithItem:(EDHFinderItem *)item {
     EDHFinderListViewController *listController = [[EDHFinder sharedFinder] listViewControllerWithDelegate:self];
-    listController.title = NSLocalizedString(@"Move", nil);
+    listController.title = [EDHUtility localizedString:@"Move" withScope:EDHFinderPodName];
     listController.navigationItem.prompt = [item relativePath];
 
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelItemDidTap:)];

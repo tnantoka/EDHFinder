@@ -10,6 +10,8 @@
 
 #import "FCFileManager.h"
 
+NSString * const EDHFinderPodName = @"EDHFinder";
+
 @implementation EDHFinder
 
 static EDHFinder *sharedInstance = nil;
@@ -63,10 +65,6 @@ static EDHFinder *sharedInstance = nil;
         relativePath = @"/";
     }
     return relativePath;
-}
-
-- (NSString *)identifier {
-    return @"com.bornneet.EDHFinder";
 }
 
 @end

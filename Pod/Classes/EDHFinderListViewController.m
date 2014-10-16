@@ -182,13 +182,13 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         case 1: {
             EDHFinderItem *item = [self itemAdIndexPath:indexPath];
 
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Action", nil) message:item.name preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Action" withScope:EDHFinderPodName] message:item.name preferredStyle:UIAlertControllerStyleActionSheet];
             
-            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Rename", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Rename" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 [self renameItem:item atIndexPath:indexPath];
             }]];
             
-            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Duplicate", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Duplicate" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 [item duplicate:^(EDHFinderItem *newItem) {
                     [self insertItem:newItem atIndex:0];
                 } failure:^(NSError *error) {
@@ -196,7 +196,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                 }];
             }]];
 
-            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Move", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Move" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 EDHFinderMoveViewController *moveController = [[EDHFinderMoveViewController alloc] initWithItem:item];
                 moveController.doneHandler = ^(EDHFinderItem *toItem) {
                     [item moveTo:toItem success:^{
@@ -208,7 +208,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                 [self presentViewController:moveController animated:YES completion:nil];
             }]];
             
-            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
             
             alertController.popoverPresentationController.sourceView = self.view;
             alertController.popoverPresentationController.sourceRect = cell.frame;
@@ -224,21 +224,21 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 # pragma mark - Actions
 
 - (void)addItemDidTap:(id)sender {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"New", nil) message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"New" withScope:EDHFinderPodName] message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"File", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"File" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self create:EDHFinderListViewControllerCreateTypeFile];
     }]];
 
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Directory", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Directory" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self create:EDHFinderListViewControllerCreateTypeDirectory];
     }]];
 
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Download", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Download" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [self create:EDHFinderListViewControllerCreateTypeDownload];
     }]];
 
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
 
     alertController.popoverPresentationController.barButtonItem = sender;
     
@@ -279,8 +279,8 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     cell.delegate = self;
     
     cell.rightButtons = @[
-                          [MGSwipeButton buttonWithTitle:NSLocalizedString(@"Delete", nil) backgroundColor:[UIColor redColor]],
-                          [MGSwipeButton buttonWithTitle:NSLocalizedString(@"More", nil) backgroundColor:[UIColor lightGrayColor]]
+                          [MGSwipeButton buttonWithTitle:[EDHUtility localizedString:@"Delete" withScope:EDHFinderPodName] backgroundColor:[UIColor redColor]],
+                          [MGSwipeButton buttonWithTitle:[EDHUtility localizedString:@"More" withScope:EDHFinderPodName] backgroundColor:[UIColor lightGrayColor]]
                           ];
 }
 
@@ -296,30 +296,30 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     
     switch (type) {
         case EDHFinderListViewControllerCreateTypeFile:
-            title = NSLocalizedString(@"New file", nil);
-            placeholder = NSLocalizedString(@"Name", nil);
+            title = [EDHUtility localizedString:@"New file" withScope:EDHFinderPodName];
+            placeholder = [EDHUtility localizedString:@"Name" withScope:EDHFinderPodName];
             text = @"";
             break;
         case EDHFinderListViewControllerCreateTypeDirectory:
-            title = NSLocalizedString(@"New directory", nil);
-            placeholder = NSLocalizedString(@"Name", nil);
+            title = [EDHUtility localizedString:@"New directory" withScope:EDHFinderPodName];
+            placeholder = [EDHUtility localizedString:@"Name" withScope:EDHFinderPodName];
             text = @"";
             break;
         case EDHFinderListViewControllerCreateTypeDownload:
-            title = NSLocalizedString(@"Download", nil);
-            placeholder = NSLocalizedString(@"URL", nil);
+            title = [EDHUtility localizedString:@"Download" withScope:EDHFinderPodName];
+            placeholder = [EDHUtility localizedString:@"URL" withScope:EDHFinderPodName];
             text = @"http://";
             break;
     }
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:@"" preferredStyle:UIAlertControllerStyleAlert];
 
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = placeholder;
         textField.text = text;
     }];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"OK" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         UITextField *textField = alertController.textFields.firstObject;
         NSString *text = textField.text;
         if (text.length > 0) {
@@ -359,21 +359,21 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         }
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)renameItem:(EDHFinderItem *)item atIndexPath:(NSIndexPath *)indexPath {
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Rename", nil) message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Rename" withScope:EDHFinderPodName] message:@"" preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"Name", nil);
+        textField.placeholder = [EDHUtility localizedString:@"Name" withScope:EDHFinderPodName];
         textField.text = item.name;
     }];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"OK" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         UITextField *textField = alertController.textFields.firstObject;
         NSString *text = textField.text;
         if (text.length > 0) {
@@ -385,7 +385,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         }
     }]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -395,7 +395,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         [self.items insertObject:item atIndex:index];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
-        [EDHUtility showErrorWithMessage:NSLocalizedString(@"Already exists.", nil) controller:self];
+        [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Already exists." withScope:EDHFinderPodName] controller:self];
     }
 }
 
