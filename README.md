@@ -16,7 +16,7 @@ EDHFinder is available through [CocoaPods](http://cocoapods.org).
 ## Demo
 
 ```
-pod try EDHFinder
+$ pod try EDHFinder
 ```
 
 ## Installation
@@ -44,7 +44,7 @@ See also [Example](/Example).
 
 ## Author
 
-[tnantoka](https://twitter.com/tnantoka)
+[@tnantoka](https://twitter.com/tnantoka)
 
 ## License
 
