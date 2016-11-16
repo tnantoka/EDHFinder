@@ -1,12 +1,11 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-target 'EDHFinder', :exclusive => true do
-  pod "EDHFinder", :path => "../"
+pod "EDHFinder", :path => "../"
+
+target 'EDHFinder' do
 end
 
-target 'Tests', :exclusive => true do
-  pod "EDHFinder", :path => "../"
-
+target 'Tests' do
   pod 'Specta', '~> 0.2.1'
   pod 'Expecta'
   pod 'FBSnapshotTestCase'

@@ -1,5 +1,5 @@
 PODS:
-  - EDHFinder (0.1.0):
+  - EDHFinder (0.1.1):
     - EDHUtility (~> 0.1)
     - FCFileManager (~> 1.0)
     - FontAwesomeKit (~> 2.1)
@@ -12,11 +12,11 @@ PODS:
   - FBSnapshotTestCase (1.2)
   - FCFileManager (1.0.5)
   - FontAwesomeKit (2.1.8):
-    - FontAwesomeKit/Core
-    - FontAwesomeKit/FontAwesome
-    - FontAwesomeKit/FoundationIcons
-    - FontAwesomeKit/IonIcons
-    - FontAwesomeKit/Zocial
+    - FontAwesomeKit/Core (= 2.1.8)
+    - FontAwesomeKit/FontAwesome (= 2.1.8)
+    - FontAwesomeKit/FoundationIcons (= 2.1.8)
+    - FontAwesomeKit/IonIcons (= 2.1.8)
+    - FontAwesomeKit/Zocial (= 2.1.8)
   - FontAwesomeKit/Core (2.1.8)
   - FontAwesomeKit/FontAwesome (2.1.8):
     - FontAwesomeKit/Core
@@ -38,17 +38,19 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   EDHFinder:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  EDHFinder: 3cc6a4dd3c535f8bc4a98dbe730ed955e97b7810
-  EDHUtility: 4e6c3994fda9d5b74a7a685c177e520835683ddf
-  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
-  Expecta+Snapshots: 30c28e3d8104665ee70e32df1cfc030bb37a8a6c
-  FBSnapshotTestCase: 4159bdf235fdae25aa7d813f1452a4f05ad4f9cd
-  FCFileManager: 63b3cc33188a72da88d1cbce69978523aa5f6320
-  FontAwesomeKit: a2edea3111dab107b4cc43b85881b404eb063385
-  MGSwipeTableCell: fe8f11999f6d99c707675693ae90745bf45086ac
-  Specta: 9141310f46b1f68b676650ff2854e1ed0b74163a
+  EDHFinder: f493fef84795dc524b62d593b460c7fab1b60e92
+  EDHUtility: 9e888c6880f52318e6f018374adb3d15c749f4a5
+  Expecta: a354d4633409dd9fe8c4f5ff5130426adbe31628
+  Expecta+Snapshots: d5efa75539358f4e7210fe05d6e2bf0aae985195
+  FBSnapshotTestCase: cea4d098941d86e023034d6cf0ad95f9de4f3f1a
+  FCFileManager: 028798097560c68ca0b9b73497ea0076af6d6e31
+  FontAwesomeKit: 64759fb28b5d2e74a1bd81553d7c11ca10e32179
+  MGSwipeTableCell: fdeddef21fff3071c8ee151eb2c1a53dc9ac2f2c
+  Specta: 15a276a6343867b426d5ed135d5aa4d04123a573
 
-COCOAPODS: 0.34.1
+PODFILE CHECKSUM: 60e1726e6119ecb21006420facfa6d796528fbde
+
+COCOAPODS: 1.1.0
