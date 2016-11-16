@@ -132,17 +132,27 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         EDHFinderItem *item = [self itemAtIndexPath:indexPath];
-        [item destroy:^{
-            [self removeItem:item atIndexPath:indexPath];
-            if ([self.listDelegate respondsToSelector:@selector(listViewController:didDestroyFile:)]) {
-                [self.listDelegate listViewController:self didDestroyFile:item];
-            }
-            if ([self.listDelegate respondsToSelector:@selector(listViewController:didBackToDirectory:)]) {
-                [self.listDelegate listViewController:self didBackToDirectory:self.item];
-            }
-        } failure:^(NSError *error) {
-            [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
-        }];
+        
+        NSString *title = [NSString stringWithFormat:[EDHUtility localizedString:@"Delete %@" withScope:EDHFinderPodName], item.name];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:[EDHUtility localizedString:@"Are you sure?" withScope:EDHFinderPodName] preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"OK" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [item destroy:^{
+                [self removeItem:item atIndexPath:indexPath];
+                if ([self.listDelegate respondsToSelector:@selector(listViewController:didDestroyFile:)]) {
+                    [self.listDelegate listViewController:self didDestroyFile:item];
+                }
+                if ([self.listDelegate respondsToSelector:@selector(listViewController:didBackToDirectory:)]) {
+                    [self.listDelegate listViewController:self didBackToDirectory:self.item];
+                }
+            } failure:^(NSError *error) {
+                [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+            }];
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
