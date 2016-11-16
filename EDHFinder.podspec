@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "EDHFinder"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "File management interface for iOS."
   s.description      = <<-DESC
                        Accessing file system with table view, developed for Edhita.
