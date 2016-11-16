@@ -131,7 +131,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        EDHFinderItem *item = [self itemAdIndexPath:indexPath];
+        EDHFinderItem *item = [self itemAtIndexPath:indexPath];
         [item destroy:^{
             [self removeItem:item atIndexPath:indexPath];
             if ([self.listDelegate respondsToSelector:@selector(listViewController:didDestroyFile:)]) {
@@ -149,7 +149,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 # pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    EDHFinderItem *item = [self itemAdIndexPath:indexPath];
+    EDHFinderItem *item = [self itemAtIndexPath:indexPath];
 
     if (item.isDirectory) {
         EDHFinderListViewController *nextController = [[[self class] alloc] initWithPath:item.path delegate:self.listDelegate];
@@ -165,7 +165,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    EDHFinderItem *item = [self itemAdIndexPath:indexPath];
+    EDHFinderItem *item = [self itemAtIndexPath:indexPath];
     NSLog(@"%@", item.name);
 }
 
@@ -180,7 +180,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
             [self tableView:self.tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
             break;
         case 1: {
-            EDHFinderItem *item = [self itemAdIndexPath:indexPath];
+            EDHFinderItem *item = [self itemAtIndexPath:indexPath];
 
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Action" withScope:EDHFinderPodName] message:item.name preferredStyle:UIAlertControllerStyleActionSheet];
             
@@ -261,7 +261,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 }
 
 - (void)configureCell:(MGSwipeTableCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    EDHFinderItem *item = [self itemAdIndexPath:indexPath];
+    EDHFinderItem *item = [self itemAtIndexPath:indexPath];
     cell.textLabel.text = item.name;
 
     FAKIonIcons *icon;
@@ -284,7 +284,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                           ];
 }
 
-- (EDHFinderItem *)itemAdIndexPath:(NSIndexPath *)indexPath {
+- (EDHFinderItem *)itemAtIndexPath:(NSIndexPath *)indexPath {
     return (EDHFinderItem *)[self.items objectAtIndex:indexPath.row];
 }
 
