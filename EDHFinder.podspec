@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   s.resource = 'Pod/Assets/EDHFinder.bundle'
 
   s.dependency 'FCFileManager', '~> 1.0'
-  s.dependency 'FontAwesomeKit', '~> 2.1'
+  s.dependency 'FontAwesomeKit', '~> 2.2'
   s.dependency 'MGSwipeTableCell', '~> 1.1'
   s.dependency 'EDHUtility', '~> 0.1'
 end

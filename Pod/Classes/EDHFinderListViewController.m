@@ -276,7 +276,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
 
     FAKIonIcons *icon;
     if (item.isDirectory) {
-        icon = [FAKIonIcons ios7FolderIconWithSize:kIconSize];
+        icon = [FAKIonIcons iosFolderIconWithSize:kIconSize];
     } else {
         icon = [FAKIonIcons documentIconWithSize:kIconSize];
     }
