@@ -17,7 +17,7 @@
 @property (nonatomic) BOOL isDirectory;
 @property (nonatomic) NSDate *modificationDate;
 @property (nonatomic, copy) NSNumber *fileSize;
-@property (nonatomic) int folderFileCount;
+@property (nonatomic) NSUInteger folderFileCount;
 
 - (id)initWithPath:(NSString *)path;
 

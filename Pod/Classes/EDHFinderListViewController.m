@@ -234,6 +234,12 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                 [self presentViewController:moveController animated:YES completion:nil];
             }]];
             
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Share" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                
+                UIActivityViewController *shareActivityController = [[UIActivityViewController alloc] initWithActivityItems:@[item.fileURL] applicationActivities:nil];
+                [self presentViewController:shareActivityController animated:YES completion:nil];
+            }]];
+            
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
             
             alertController.popoverPresentationController.sourceView = self.view;
@@ -305,7 +311,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
         NSString *detailText = [NSString stringWithFormat:@"%@, %@",item.modificationDate.description,formateFileSize];
         cell.detailTextLabel.text = detailText;
     } else {
-        NSString *detailText = [NSString stringWithFormat:@"%@, %d items",item.modificationDate.description, item.folderFileCount];
+        NSString *detailText = [NSString stringWithFormat:@"%@, %lu %@",item.modificationDate.description, (unsigned long)item.folderFileCount, [EDHUtility localizedString:@"Item" withScope:EDHFinderPodName]];
         cell.detailTextLabel.text = detailText;
     }
     
