@@ -15,6 +15,8 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
+#import "SSZipArchive.h"
+
 typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     EDHFinderItemCreateTypeFile,
     EDHFinderItemCreateTypeDirectory,
@@ -33,6 +35,12 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
         self.isFile = [attributes[NSFileType] isEqualToString:NSFileTypeRegular];
         self.isDirectory = [attributes[NSFileType] isEqualToString:NSFileTypeDirectory];
         self.modificationDate = attributes[NSFileModificationDate];
+        self.fileSize = attributes[NSFileSize];
+        if (self.isDirectory) {
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSArray *fileList = [fileManager contentsOfDirectoryAtPath:self.path error:nil];
+            self.folderFileCount = fileList.count;
+        }
         
 //        if (self.isDirectory) {
 //            self.name = [self.name stringByAppendingString:@"/"];
@@ -190,6 +198,59 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     }
     
     EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:path];
+    if (success) {
+        success(item);
+    }
+}
+
+- (void)compress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+    NSString *newName = [NSString stringWithFormat:@"%@.zip", self.path];
+    NSError *error = nil;
+    //Folder compress
+    if (self.isDirectory) {
+        [SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path];
+    } else if (self.isFile){//File compress
+        NSArray *fileArray = @[self.path];
+        [SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray];
+    }
+        
+    if (error) {
+        if (failure) {
+            failure(error);
+        }
+        return;
+    }
+    
+    EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
+    if (success) {
+        success(item);
+    }
+}
+
+- (void)uncompress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+    
+    NSString *newName = @"";
+    NSString *filePath = [self.path stringByDeletingLastPathComponent];
+    if ([self.path hasSuffix:@".zip"]) {
+        NSString *fileName = [[self.path lastPathComponent] stringByDeletingPathExtension];
+        newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
+    } else {
+        NSString *fileName = [self.path lastPathComponent];
+        newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
+    }
+     
+    NSError *error = nil;
+        
+    [SSZipArchive unzipFileAtPath:self.path toDestination:newName];
+    
+    if (error) {
+        if (failure) {
+            failure(error);
+        }
+        return;
+    }
+    
+    EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
     if (success) {
         success(item);
     }

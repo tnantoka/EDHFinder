@@ -205,6 +205,22 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                 }];
             }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Compress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [item compress:^(EDHFinderItem *newItem) {
+                    [self insertItem:newItem atIndex:0];
+                } failure:^(NSError *error) {
+                    [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                }];
+            }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Uncompress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [item uncompress:^(EDHFinderItem *newItem) {
+                    [self insertItem:newItem atIndex:0];
+                } failure:^(NSError *error) {
+                    [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                }];
+            }]];
 
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Move" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 EDHFinderMoveViewController *moveController = [[EDHFinderMoveViewController alloc] initWithItem:item];
@@ -284,7 +300,14 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     UIImage *image = [icon imageWithSize:CGSizeMake(kIconSize, kIconSize)];
     cell.imageView.image = image;
     
-    cell.detailTextLabel.text = item.modificationDate.description;
+    if (item.isFile) {
+        NSString *formateFileSize = [NSByteCountFormatter stringFromByteCount:item.fileSize.longLongValue countStyle:NSByteCountFormatterCountStyleFile];
+        NSString *detailText = [NSString stringWithFormat:@"%@, %@",item.modificationDate.description,formateFileSize];
+        cell.detailTextLabel.text = detailText;
+    } else {
+        NSString *detailText = [NSString stringWithFormat:@"%@, %d items",item.modificationDate.description, item.folderFileCount];
+        cell.detailTextLabel.text = detailText;
+    }
     
     cell.delegate = self;
     

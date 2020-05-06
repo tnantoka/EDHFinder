@@ -16,6 +16,8 @@
 @property (nonatomic) BOOL isFile;
 @property (nonatomic) BOOL isDirectory;
 @property (nonatomic) NSDate *modificationDate;
+@property (nonatomic, copy) NSNumber *fileSize;
+@property (nonatomic) int folderFileCount;
 
 - (id)initWithPath:(NSString *)path;
 
@@ -32,6 +34,8 @@
 - (void)moveTo:(EDHFinderItem *)toItem success:(void (^)())success failure:(void (^)(NSError *error))failure;
 - (void)destroy:(void (^)())success failure:(void (^)(NSError *error))failure;
 - (void)duplicate:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
+- (void)compress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
+- (void)uncompress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
 
 - (NSURL *)fileURL;
 - (NSString *)content;
