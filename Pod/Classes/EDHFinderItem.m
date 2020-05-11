@@ -203,15 +203,18 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     }
 }
 
-- (void)compress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+- (void)compressWithPassword:(NSString *)pwd success:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
     NSString *newName = [NSString stringWithFormat:@"%@.zip", self.path];
     NSError *error = nil;
+        
     //Folder compress
     if (self.isDirectory) {
-        [SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path];
+        //[SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path];
+        [SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path withPassword:pwd];
     } else if (self.isFile){//File compress
         NSArray *fileArray = @[self.path];
-        [SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray];
+        //[SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray];
+        [SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray withPassword:pwd];
     }
         
     if (error) {
@@ -227,7 +230,7 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     }
 }
 
-- (void)uncompress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+- (void)uncompressWithPassword:(NSString *)pwd success:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
     
     NSString *newName = @"";
     NSString *filePath = [self.path stringByDeletingLastPathComponent];
@@ -239,21 +242,23 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
         newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
     }
      
-    NSError *error = nil;
+    //[SSZipArchive unzipFileAtPath:self.path toDestination:newName];
+    [SSZipArchive unzipFileAtPath:self.path toDestination:newName
+                  progressHandler:^(NSString * _Nonnull entry, unz_file_info zipInfo, long entryNumber, long total) {
         
-    [SSZipArchive unzipFileAtPath:self.path toDestination:newName];
-    
-    if (error) {
-        if (failure) {
-            failure(error);
+    } completionHandler:^(NSString * _Nonnull path, BOOL succeeded, NSError * _Nullable error) {
+        if (error) {
+            if (failure) {
+                failure(error);
+            }
+            return;
         }
-        return;
-    }
-    
-    EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
-    if (success) {
-        success(item);
-    }
+        
+        EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
+        if (success) {
+            success(item);
+        }
+    }];
 }
 
 - (NSURL *)fileURL {
