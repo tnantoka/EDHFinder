@@ -36,6 +36,8 @@
 - (void)duplicate:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
 - (void)compressWithPassword:(NSString *)pwd success:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
 - (void)uncompressWithPassword:(NSString *)pwd success:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
+- (void)compress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
+- (void)uncompress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure;
 
 - (NSURL *)fileURL;
 - (NSString *)content;

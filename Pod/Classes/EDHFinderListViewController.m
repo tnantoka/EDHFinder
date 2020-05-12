@@ -207,51 +207,82 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
             }]];
             
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Compress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Please enter password", nil)                                                                            message:@""
+                UIAlertController *alertUsingPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Do you want to zip file with password?" withScope:EDHFinderPodName]                                                                            message:@""
                                                                                   preferredStyle:UIAlertControllerStyleAlert];
-                [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                    textField.secureTextEntry = YES;
+                                
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Yes" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Please enter password" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.secureTextEntry = YES;
+                    }];
+                    
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Ok" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
+                        //NSLog(@"Current password ->%@<-", pwdTmp);
+                        [item compressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                            [self insertItem:newItem atIndex:0];
+                        } failure:^(NSError *error) {
+                            [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                        }];
+                    }];
+                    [alertPasswordController addAction:okAction];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertPasswordController addAction:cancelAction];
+                    [self presentViewController:alertPasswordController animated:YES completion:nil];
                 }];
-                
-                UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
-                    //NSLog(@"Current password ->%@<-", pwdTmp);
-                    [item compressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                [alertUsingPasswordController addAction:okAction];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"No" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [item compress:^(EDHFinderItem *newItem) {
                         [self insertItem:newItem atIndex:0];
                     } failure:^(NSError *error) {
-                        [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                        [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Zip fail!" withScope:EDHFinderPodName] controller:self];
                     }];
                 }];
-                [alertPasswordController addAction:okAction];
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    
-                }];
-                [alertPasswordController addAction:cancelAction];
-                [self presentViewController:alertPasswordController animated:YES completion:nil];
+                [alertUsingPasswordController addAction:cancelAction];
+                [self presentViewController:alertUsingPasswordController animated:YES completion:nil];
+                
             }]];
             
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Uncompress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Please enter password", nil)                                                                            message:@""
+                
+                UIAlertController *alertUsingPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Do you want to unzip file with password?" withScope:EDHFinderPodName]                                                                            message:@""
                                                                                   preferredStyle:UIAlertControllerStyleAlert];
-                [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                    textField.secureTextEntry = YES;
+                
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Yes" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Please enter password" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.secureTextEntry = YES;
+                    }];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Ok" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
+                        [item uncompressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                            [self insertItem:newItem atIndex:0];
+                        } failure:^(NSError *error) {
+                            [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Unzip fail!" withScope:EDHFinderPodName] controller:self];
+                        }];
+                    }];
+                    [alertPasswordController addAction:okAction];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertPasswordController addAction:cancelAction];
+                    [self presentViewController:alertPasswordController animated:YES completion:nil];
                 }];
-                UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
-                    //NSLog(@"Current password %@", [[alertController textFields][0] text]);
-                    //NSLog(@"Current password ->%@<-", pwdTmp);
-                    [item uncompressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                [alertUsingPasswordController addAction:okAction];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"No" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [item uncompress:^(EDHFinderItem *newItem) {
                         [self insertItem:newItem atIndex:0];
                     } failure:^(NSError *error) {
-                        [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                        [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Unzip fail!" withScope:EDHFinderPodName] controller:self];
                     }];
                 }];
-                [alertPasswordController addAction:okAction];
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    
-                }];
-                [alertPasswordController addAction:cancelAction];
-                [self presentViewController:alertPasswordController animated:YES completion:nil];
+                [alertUsingPasswordController addAction:cancelAction];
+                [self presentViewController:alertUsingPasswordController animated:YES completion:nil];
+                
             }]];
 
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Move" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {

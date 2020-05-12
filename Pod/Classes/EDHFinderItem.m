@@ -203,17 +203,67 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
     }
 }
 
+- (void)compress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+    NSString *newName = [NSString stringWithFormat:@"%@.zip", self.path];
+    NSError *error = nil;
+    
+    BOOL isSuccessed = NO;
+    //Folder compress
+    if (self.isDirectory) {
+        
+        isSuccessed = [SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path];
+    } else if (self.isFile){//File compress
+        NSArray *fileArray = @[self.path];
+        isSuccessed = [SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray];
+    }
+        
+    if (!isSuccessed) {
+        if (failure) {
+            failure(error);
+        }
+        return;
+    }
+        
+    if (isSuccessed) {
+        EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
+        success(item);
+    }
+}
+
+- (void)uncompress:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
+    NSError *err = nil;
+    NSString *newName = @"";
+    
+    NSString *filePath = [self.path stringByDeletingLastPathComponent];
+    if ([self.path hasSuffix:@".zip"]) {
+        NSString *fileName = [[self.path lastPathComponent] stringByDeletingPathExtension];
+        newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
+    } else {
+        NSString *fileName = [self.path lastPathComponent];
+        newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
+    }
+    BOOL isSuccessed = [SSZipArchive unzipFileAtPath:self.path toDestination:newName];
+    if (!isSuccessed) {        
+        failure(err);
+        return;
+    }
+        
+    if (isSuccessed) {
+        EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
+        success(item);
+    }
+}
+
 - (void)compressWithPassword:(NSString *)pwd success:(void (^)(EDHFinderItem *newItem))success failure:(void (^)(NSError *error))failure {
     NSString *newName = [NSString stringWithFormat:@"%@.zip", self.path];
     NSError *error = nil;
-        
+    NSLog(@"pwd:%@<--",pwd);
     //Folder compress
     if (self.isDirectory) {
-        //[SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path];
+        
         [SSZipArchive createZipFileAtPath:newName withContentsOfDirectory:self.path withPassword:pwd];
     } else if (self.isFile){//File compress
         NSArray *fileArray = @[self.path];
-        //[SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray];
         [SSZipArchive createZipFileAtPath:newName withFilesAtPaths:fileArray withPassword:pwd];
     }
         
@@ -241,21 +291,18 @@ typedef NS_ENUM(NSUInteger, EDHFinderItemCreateType) {
         NSString *fileName = [self.path lastPathComponent];
         newName = [NSString stringWithFormat:@"%@/_%@", filePath, fileName];
     }
-     
+    NSLog(@"pwd:%@<--",pwd);
     //[SSZipArchive unzipFileAtPath:self.path toDestination:newName];
-    [SSZipArchive unzipFileAtPath:self.path toDestination:newName
-                  progressHandler:^(NSString * _Nonnull entry, unz_file_info zipInfo, long entryNumber, long total) {
-        
+    [SSZipArchive unzipFileAtPath:self.path toDestination:newName overwrite:YES password:pwd progressHandler:^(NSString * _Nonnull entry, unz_file_info zipInfo, long entryNumber, long total) {
+        //NSLog(@"entry:%@, entryNumber:%ld, total:%ld",entry, entryNumber, total);
     } completionHandler:^(NSString * _Nonnull path, BOOL succeeded, NSError * _Nullable error) {
-        if (error) {
-            if (failure) {
-                failure(error);
-            }
+        if (!succeeded) {
+            failure(error);
             return;
         }
-        
+        NSLog(@"path:%@, succeeded:%d, error:%@",path, succeeded,error);
         EDHFinderItem *item = [[EDHFinderItem alloc] initWithPath:newName];
-        if (success) {
+        if (succeeded) {
             success(item);
         }
     }];
