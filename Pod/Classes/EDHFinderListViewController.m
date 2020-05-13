@@ -205,6 +205,85 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
                 }];
             }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Compress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *alertUsingPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Do you want to zip file with password?" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Yes" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Please enter password" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.secureTextEntry = YES;
+                    }];
+                    
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Ok" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
+                        //NSLog(@"Current password ->%@<-", pwdTmp);
+                        [item compressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                            [self insertItem:newItem atIndex:0];
+                        } failure:^(NSError *error) {
+                            [EDHUtility showErrorWithMessage:error.localizedDescription controller:self];
+                        }];
+                    }];
+                    [alertPasswordController addAction:okAction];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertPasswordController addAction:cancelAction];
+                    [self presentViewController:alertPasswordController animated:YES completion:nil];
+                }];
+                [alertUsingPasswordController addAction:okAction];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"No" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [item compress:^(EDHFinderItem *newItem) {
+                        [self insertItem:newItem atIndex:0];
+                    } failure:^(NSError *error) {
+                        [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Zip fail!" withScope:EDHFinderPodName] controller:self];
+                    }];
+                }];
+                [alertUsingPasswordController addAction:cancelAction];
+                [self presentViewController:alertUsingPasswordController animated:YES completion:nil];
+                
+            }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Uncompress" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                
+                UIAlertController *alertUsingPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Do you want to unzip file with password?" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Yes" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIAlertController *alertPasswordController = [UIAlertController alertControllerWithTitle:[EDHUtility localizedString:@"Please enter password" withScope:EDHFinderPodName]                                                                            message:@""
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    [alertPasswordController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                        textField.secureTextEntry = YES;
+                    }];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Ok" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        NSString *pwdTmp = [[[alertPasswordController textFields] firstObject] text] == nil ? @"": [[[alertPasswordController textFields] firstObject] text];
+                        [item uncompressWithPassword:pwdTmp success:^(EDHFinderItem *newItem) {
+                            [self insertItem:newItem atIndex:0];
+                        } failure:^(NSError *error) {
+                            [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Unzip fail!" withScope:EDHFinderPodName] controller:self];
+                        }];
+                    }];
+                    [alertPasswordController addAction:okAction];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        
+                    }];
+                    [alertPasswordController addAction:cancelAction];
+                    [self presentViewController:alertPasswordController animated:YES completion:nil];
+                }];
+                [alertUsingPasswordController addAction:okAction];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[EDHUtility localizedString:@"No" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [item uncompress:^(EDHFinderItem *newItem) {
+                        [self insertItem:newItem atIndex:0];
+                    } failure:^(NSError *error) {
+                        [EDHUtility showErrorWithMessage:[EDHUtility localizedString:@"Unzip fail!" withScope:EDHFinderPodName] controller:self];
+                    }];
+                }];
+                [alertUsingPasswordController addAction:cancelAction];
+                [self presentViewController:alertUsingPasswordController animated:YES completion:nil];
+                
+            }]];
 
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Move" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 EDHFinderMoveViewController *moveController = [[EDHFinderMoveViewController alloc] initWithItem:item];
@@ -216,6 +295,12 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
                     }];
                 };
                 [self presentViewController:moveController animated:YES completion:nil];
+            }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Share" withScope:EDHFinderPodName] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                
+                UIActivityViewController *shareActivityController = [[UIActivityViewController alloc] initWithActivityItems:@[item.fileURL] applicationActivities:nil];
+                [self presentViewController:shareActivityController animated:YES completion:nil];
             }]];
             
             [alertController addAction:[UIAlertAction actionWithTitle:[EDHUtility localizedString:@"Cancel" withScope:EDHFinderPodName] style:UIAlertActionStyleCancel handler:nil]];
@@ -284,7 +369,14 @@ typedef NS_ENUM(NSUInteger, EDHFinderListViewControllerCreateType) {
     UIImage *image = [icon imageWithSize:CGSizeMake(kIconSize, kIconSize)];
     cell.imageView.image = image;
     
-    cell.detailTextLabel.text = item.modificationDate.description;
+    if (item.isFile) {
+        NSString *formateFileSize = [NSByteCountFormatter stringFromByteCount:item.fileSize.longLongValue countStyle:NSByteCountFormatterCountStyleFile];
+        NSString *detailText = [NSString stringWithFormat:@"%@, %@",item.modificationDate.description,formateFileSize];
+        cell.detailTextLabel.text = detailText;
+    } else {
+        NSString *detailText = [NSString stringWithFormat:@"%@, %lu %@",item.modificationDate.description, (unsigned long)item.folderFileCount, [EDHUtility localizedString:@"Item" withScope:EDHFinderPodName]];
+        cell.detailTextLabel.text = detailText;
+    }
     
     cell.delegate = self;
     
